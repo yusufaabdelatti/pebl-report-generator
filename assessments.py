@@ -15,15 +15,11 @@ import pandas as pd
 # ---------------------------------------------------------------------------
 
 WCST_DESCRIPTION = (
-    "The Wisconsin Card Sorting Test (WCST) is a widely used neuropsychological "
-    "measure of executive function. It requires the examinee to sort cards "
-    "according to a rule "
-    "(color, shape, or number) inferred only from trial-and-error feedback; the "
-    "rule changes periodically without warning. Performance indexes cognitive "
-    "flexibility, abstract reasoning, working memory, and the ability to shift "
-    "strategies in response to changing feedback — abilities that are commonly "
-    "impaired in frontal-lobe dysfunction and a range of neurological and "
-    "psychiatric conditions."
+    "The Wisconsin Card Sorting Test (WCST) measures executive function. The "
+    "examinee sorts cards by a rule (color, shape, or number) inferred only "
+    "from feedback; the rule changes without warning. It reflects cognitive "
+    "flexibility, abstract reasoning, and strategy-shifting ability — often "
+    "impaired in frontal-lobe and other neurological or psychiatric conditions."
 )
 
 # (csv_column, display label, definition, higher_is_better)
@@ -66,13 +62,10 @@ WCST_METRICS = [
 ]
 
 WCST_REFERENCE_NOTE = (
-    "Reference bands below are general, literature-based rules of thumb (e.g., "
-    "% perseverative errors under ~10% is typically considered within a "
-    "typical range, 10–20% mildly elevated, and above ~20% notably elevated). "
-    "They are NOT a substitute for formal age- and education-corrected "
-    "normative comparisons (e.g., Heaton et al. standardization tables), which "
-    "require demographic data this app does not collect. Treat all bands as "
-    "descriptive context only, not a standardized score."
+    "Perseverative Errors — Typical <10% · Mildly elevated 10–20% · Notably "
+    "elevated >20%. Conceptual-Level Responses — Typical ≥70% · Mildly "
+    "reduced 50–70% · Notably reduced <50%. General reference ranges, not "
+    "formal age/education-corrected norms."
 )
 
 
@@ -168,13 +161,10 @@ def classify_pct_conceptual(pct: float) -> str:
 # ---------------------------------------------------------------------------
 
 PIQ_DESCRIPTION = (
-    "Performance IQ (Non-Verbal) summarizes performance on a non-verbal "
-    "reasoning measure (e.g., a performance/perceptual-reasoning IQ index such "
-    "as those derived from Wechsler-family scales, Raven's Progressive "
-    "Matrices, or comparable instruments). It reflects fluid, non-verbal "
-    "problem-solving — pattern recognition, spatial reasoning, and visual "
-    "analysis — largely independent of language ability or acquired verbal "
-    "knowledge."
+    "Performance IQ (Non-Verbal) reflects fluid, non-verbal reasoning — "
+    "pattern recognition, spatial reasoning, and visual problem-solving — "
+    "largely independent of language ability. It's derived from measures such "
+    "as Wechsler-family performance indices or Raven's Progressive Matrices."
 )
 
 # Standard Wechsler-scale IQ classification bands (mean 100, SD 15).
@@ -187,6 +177,12 @@ PIQ_BANDS = [
     (70, 80, "Borderline"),
     (float("-inf"), 70, "Extremely Low"),
 ]
+
+PIQ_REFERENCE_NOTE = (
+    "Very Superior 130+ · Superior 120–129 · High Average 110–119 · Average "
+    "90–109 · Low Average 80–89 · Borderline 70–79 · Extremely Low <70 "
+    "(Wechsler-scale classification)."
+)
 
 
 def classify_iq(score: float) -> str:
@@ -201,13 +197,11 @@ def classify_iq(score: float) -> str:
 # ---------------------------------------------------------------------------
 
 MEMORY_DESCRIPTION = (
-    "This memory and visual-scanning assessment requires the examinee to "
-    "locate and select numbers in ascending sequence (1 through 99), as "
-    "quickly as possible, from a grid where the numbers are scattered in an "
-    "unpredictable layout rather than a simple order. It measures visual "
-    "scanning speed, sustained attention, processing speed, and spatial "
-    "working memory — the ability to hold the next target and its "
-    "approximate location in mind while continuing to search."
+    "This assessment requires the examinee to locate numbers 1–99 in "
+    "ascending order, as fast as possible, from an unpredictably arranged "
+    "grid. It measures visual scanning speed, sustained attention, processing "
+    "speed, and spatial working memory — holding the next target's "
+    "approximate location in mind while searching."
 )
 
 # (lower bound minutes inclusive, upper bound minutes exclusive, label)
@@ -217,6 +211,11 @@ MEMORY_TIME_BANDS = [
     (19, 22, "Passed"),
     (22, float("inf"), "Failed"),
 ]
+
+MEMORY_REFERENCE_NOTE = (
+    "Excellent ≤15 min · Good 16–18 min · Passed 19–21 min · Failed ≥22 min "
+    "(per source tool's scoring guide)."
+)
 
 
 def classify_memory_time(total_minutes: float) -> str:

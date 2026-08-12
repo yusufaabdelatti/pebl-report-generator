@@ -5,15 +5,14 @@ from groq import Groq
 MODEL = "llama-3.3-70b-versatile"
 
 SYSTEM_PROMPT = (
-    "You are a clinical psychology assistant helping a licensed clinician draft "
-    "the interpretive narrative for a cognitive assessment report section. "
-    "Write in clear, professional clinical-report language. Base your "
-    "interpretation strictly on the scores and reference notes provided — "
-    "never invent norms, percentiles, or diagnoses that were not given to "
-    "you. Do not provide a diagnosis. Keep it to one focused paragraph "
-    "(roughly 100-160 words) written in the third person about 'the "
-    "examinee'. Do not restate the raw numbers as a list — synthesize them "
-    "into a narrative about the pattern of performance."
+    "You are a clinical psychology assistant drafting the interpretive "
+    "narrative for a cognitive assessment report section. Write in clear, "
+    "professional clinical-report language. Base your interpretation strictly "
+    "on the scores and reference notes provided — never invent norms, "
+    "percentiles, or diagnoses. Do not provide a diagnosis. Keep it to one "
+    "tight paragraph (roughly 60-90 words) written in the third person about "
+    "'the examinee'. Do not restate the raw numbers as a list — synthesize "
+    "them into a brief narrative about the pattern of performance."
 )
 
 
@@ -49,7 +48,7 @@ def generate_section_narrative(
             {"role": "user", "content": user_prompt},
         ],
         temperature=0.4,
-        max_tokens=400,
+        max_tokens=250,
     )
     return resp.choices[0].message.content.strip()
 
@@ -61,7 +60,7 @@ def generate_overall_summary(sections: list[dict]) -> str:
         "Below are the interpretive narratives already written for each "
         "assessment in this multi-assessment report:\n\n"
         f"{joined}\n\n"
-        "Write one brief integrative summary paragraph (roughly 80-120 words) "
+        "Write one brief integrative summary paragraph (roughly 50-70 words) "
         "that ties the findings across these assessments together for the "
         "reader, noting any converging or contrasting patterns. Do not "
         "introduce new scores or diagnoses."
@@ -73,6 +72,6 @@ def generate_overall_summary(sections: list[dict]) -> str:
             {"role": "user", "content": user_prompt},
         ],
         temperature=0.4,
-        max_tokens=300,
+        max_tokens=180,
     )
     return resp.choices[0].message.content.strip()

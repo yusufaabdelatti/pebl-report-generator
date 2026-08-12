@@ -6,7 +6,9 @@ import streamlit as st
 
 from assessments import (
     MEMORY_DESCRIPTION,
+    MEMORY_REFERENCE_NOTE,
     PIQ_DESCRIPTION,
+    PIQ_REFERENCE_NOTE,
     WCST_DESCRIPTION,
     WCST_REFERENCE_NOTE,
     classify_iq,
@@ -190,7 +192,7 @@ if st.button("Generate PDF Report", type="primary", disabled=not st.session_stat
                         "description": PIQ_DESCRIPTION,
                         "scorecard": cards,
                         "narrative": narrative,
-                        "reference_note": "",
+                        "reference_note": PIQ_REFERENCE_NOTE,
                     })
 
                 elif a["type"] == "memory":
@@ -206,7 +208,7 @@ if st.button("Generate PDF Report", type="primary", disabled=not st.session_stat
                         "description": MEMORY_DESCRIPTION,
                         "scorecard": cards,
                         "narrative": narrative,
-                        "reference_note": "",
+                        "reference_note": MEMORY_REFERENCE_NOTE,
                     })
 
             overall_summary = generate_overall_summary(sections) if len(sections) > 1 else None
