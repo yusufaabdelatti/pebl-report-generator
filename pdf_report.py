@@ -102,14 +102,7 @@ def build_pdf(
 
     story.append(Spacer(1, 36))
     story.append(HRFlowable(width="100%", thickness=0.5, color=colors.HexColor("#999999")))
-    story.append(Spacer(1, 4))
-    story.append(Paragraph(
-        "This report includes AI-assisted interpretive narrative generated from the "
-        "scores above. It is intended to support, not replace, clinical judgment and "
-        "must be reviewed before use.",
-        styles["Meta"],
-    ))
-    story.append(Spacer(1, 20))
+    story.append(Spacer(1, 12))
     story.append(Paragraph(f"Signed: <b>{clinician_name or '_' * 30}</b>", styles["Body"]))
     story.append(Paragraph(report_date.strftime("%B %d, %Y"), styles["Meta"]))
 

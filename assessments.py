@@ -13,9 +13,9 @@ import pandas as pd
 # ---------------------------------------------------------------------------
 
 WCST_DESCRIPTION = (
-    "The Wisconsin Card Sorting Test (WCST), implemented here via PEBL's Berg "
-    "Card Sorting Task, is a widely used neuropsychological measure of executive "
-    "function. It requires the examinee to sort cards according to a rule "
+    "The Wisconsin Card Sorting Test (WCST) is a widely used neuropsychological "
+    "measure of executive function. It requires the examinee to sort cards "
+    "according to a rule "
     "(color, shape, or number) inferred only from trial-and-error feedback; the "
     "rule changes periodically without warning. Performance indexes cognitive "
     "flexibility, abstract reasoning, working memory, and the ability to shift "
@@ -162,8 +162,7 @@ PIQ_DESCRIPTION = (
     "Matrices, or comparable instruments). It reflects fluid, non-verbal "
     "problem-solving — pattern recognition, spatial reasoning, and visual "
     "analysis — largely independent of language ability or acquired verbal "
-    "knowledge. This score is entered directly rather than derived from a "
-    "PEBL CSV file."
+    "knowledge."
 )
 
 # Standard Wechsler-scale IQ classification bands (mean 100, SD 15).
