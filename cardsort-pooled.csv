@@ -1,0 +1,2 @@
+subNum,TimeStamp,timeinsec,runlength,numcats,numTrials,totCorr,err,totPers,totPersErr,nonp,totUnique,firstcat,failuretomaintain,learningtolearn,conceptual,totPersPAR,totPersErrPar
+YUSU_1001,Thu Aug 13 00:12:20 2026,401.319,10,9,107,93,14,30,10,4,0,11,0,1.0842e-19,90,4,4
