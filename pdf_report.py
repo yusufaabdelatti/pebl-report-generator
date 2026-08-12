@@ -8,6 +8,7 @@ from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
 from reportlab.lib.units import inch
 from reportlab.platypus import (
     HRFlowable,
+    PageBreak,
     Paragraph,
     SimpleDocTemplate,
     Spacer,
@@ -66,7 +67,9 @@ def build_pdf(
     ))
     story.append(HRFlowable(width="100%", thickness=1, color=ACCENT, spaceBefore=8, spaceAfter=12))
 
-    for section in sections:
+    for i, section in enumerate(sections):
+        if i > 0:
+            story.append(PageBreak())
         story.append(Paragraph(section["name"], styles["SectionHeading"]))
         if section.get("date"):
             story.append(Paragraph(f"Assessment Date: <b>{section['date'].strftime('%B %d, %Y')}</b>", styles["Meta"]))
