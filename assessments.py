@@ -194,3 +194,50 @@ def classify_iq(score: float) -> str:
         if lo <= score < hi:
             return label
     return "Unclassified"
+
+
+# ---------------------------------------------------------------------------
+# Memory Assessment (Number-Finding & Visual Scan) — manually entered, no CSV
+# ---------------------------------------------------------------------------
+
+MEMORY_DESCRIPTION = (
+    "This memory and visual-scanning assessment requires the examinee to "
+    "locate and select numbers in ascending sequence (1 through 99), as "
+    "quickly as possible, from a grid where the numbers are scattered in an "
+    "unpredictable layout rather than a simple order. It measures visual "
+    "scanning speed, sustained attention, processing speed, and spatial "
+    "working memory — the ability to hold the next target and its "
+    "approximate location in mind while continuing to search."
+)
+
+# (lower bound minutes inclusive, upper bound minutes exclusive, label)
+MEMORY_TIME_BANDS = [
+    (0, 16, "Excellent"),
+    (16, 19, "Good"),
+    (19, 22, "Passed"),
+    (22, float("inf"), "Failed"),
+]
+
+
+def classify_memory_time(total_minutes: float) -> str:
+    for lo, hi, label in MEMORY_TIME_BANDS:
+        if lo <= total_minutes < hi:
+            return label
+    return "Failed"
+
+
+def memory_scorecard(minutes: int, seconds: int, errors: int) -> list[dict]:
+    total_minutes = minutes + seconds / 60
+    band = classify_memory_time(total_minutes)
+    return [
+        {
+            "label": "Completion Time",
+            "value": f"{minutes:02d}:{seconds:02d}",
+            "classification": band,
+        },
+        {
+            "label": "Errors",
+            "value": errors,
+            "classification": "",
+        },
+    ]

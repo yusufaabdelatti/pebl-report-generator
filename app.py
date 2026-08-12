@@ -5,10 +5,12 @@ from datetime import date
 import streamlit as st
 
 from assessments import (
+    MEMORY_DESCRIPTION,
     PIQ_DESCRIPTION,
     WCST_DESCRIPTION,
     WCST_REFERENCE_NOTE,
     classify_iq,
+    memory_scorecard,
     parse_wcst_csv,
     parse_wcst_timestamp,
     wcst_row_label,
@@ -40,7 +42,11 @@ with st.sidebar:
 st.divider()
 st.subheader("1. Add an assessment")
 
-ASSESSMENT_TYPES = ["Wisconsin Card Sorting Test (WCST)", "Performance IQ (Non-Verbal)"]
+ASSESSMENT_TYPES = [
+    "Wisconsin Card Sorting Test (WCST)",
+    "Performance IQ (Non-Verbal)",
+    "Memory Assessment (Number-Finding & Visual Scan)",
+]
 assessment_type = st.selectbox("Assessment", ASSESSMENT_TYPES)
 
 if assessment_type == "Wisconsin Card Sorting Test (WCST)":
@@ -92,6 +98,29 @@ elif assessment_type == "Performance IQ (Non-Verbal)":
         })
         st.rerun()
 
+elif assessment_type == "Memory Assessment (Number-Finding & Visual Scan)":
+    time_cols = st.columns(2)
+    with time_cols[0]:
+        mem_minutes = st.number_input("Minutes", min_value=0, max_value=120, value=0, step=1)
+    with time_cols[1]:
+        mem_seconds = st.number_input("Seconds", min_value=0, max_value=59, value=0, step=1)
+    mem_errors = st.number_input("Errors", min_value=0, value=0, step=1)
+    mem_date = st.date_input(
+        "Assessment Date",
+        value=date.today(),
+        key=f"memory_date_{len(st.session_state.assessments)}",
+    )
+    if st.button("Add Memory Assessment to report"):
+        st.session_state.assessments.append({
+            "type": "memory",
+            "name": "Memory Assessment (Number-Finding & Visual Scan)",
+            "minutes": mem_minutes,
+            "seconds": mem_seconds,
+            "errors": mem_errors,
+            "date": mem_date,
+        })
+        st.rerun()
+
 st.divider()
 st.subheader(f"2. Assessments in this report ({len(st.session_state.assessments)})")
 
@@ -105,6 +134,11 @@ else:
                 st.write(
                     f"**{i + 1}. {a['name']}** — subject `{a['row'].get('subNum', '?')}` "
                     f"— {a['date'].strftime('%b %d, %Y')}"
+                )
+            elif a["type"] == "memory":
+                st.write(
+                    f"**{i + 1}. {a['name']}** — {a['minutes']:02d}:{a['seconds']:02d}, "
+                    f"{a['errors']} errors — {a['date'].strftime('%b %d, %Y')}"
                 )
             else:
                 st.write(f"**{i + 1}. {a['name']}** — score {a['score']} — {a['date'].strftime('%b %d, %Y')}")
@@ -154,6 +188,22 @@ if st.button("Generate PDF Report", type="primary", disabled=not st.session_stat
                         "name": a["name"],
                         "date": a["date"],
                         "description": PIQ_DESCRIPTION,
+                        "scorecard": cards,
+                        "narrative": narrative,
+                        "reference_note": "",
+                    })
+
+                elif a["type"] == "memory":
+                    cards = memory_scorecard(a["minutes"], a["seconds"], a["errors"])
+                    score_lines = [
+                        f"{c['label']}: {c['value']}" + (f" ({c['classification']})" if c["classification"] else "")
+                        for c in cards
+                    ]
+                    narrative = generate_section_narrative(a["name"], MEMORY_DESCRIPTION, score_lines)
+                    sections.append({
+                        "name": a["name"],
+                        "date": a["date"],
+                        "description": MEMORY_DESCRIPTION,
                         "scorecard": cards,
                         "narrative": narrative,
                         "reference_note": "",
