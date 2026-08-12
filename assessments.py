@@ -197,11 +197,9 @@ def classify_iq(score: float) -> str:
 # ---------------------------------------------------------------------------
 
 MEMORY_DESCRIPTION = (
-    "This assessment requires the examinee to locate numbers 1–99 in "
-    "ascending order, as fast as possible, from an unpredictably arranged "
-    "grid. It measures visual scanning speed, sustained attention, processing "
-    "speed, and spatial working memory — holding the next target's "
-    "approximate location in mind while searching."
+    "This assessment evaluates memory and visual scanning ability, reflecting "
+    "visual scanning speed, sustained attention, processing speed, and "
+    "spatial working memory."
 )
 
 # (lower bound minutes inclusive, upper bound minutes exclusive, label)
