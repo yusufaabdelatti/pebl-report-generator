@@ -4,6 +4,8 @@ To add a new PEBL assessment later: add its description, metric list, a
 parse_*_csv() function, and a *_scorecard() function following the WCST
 pattern below, then wire it into app.py's ASSESSMENT_TYPES.
 """
+from datetime import date as date_cls
+from datetime import datetime
 from typing import Mapping
 
 import pandas as pd
@@ -84,6 +86,16 @@ def wcst_row_label(row: Mapping) -> str:
     sub = row.get("subNum", "unknown")
     ts = row.get("TimeStamp", "")
     return f"{sub} — {ts}"
+
+
+def parse_wcst_timestamp(ts) -> date_cls | None:
+    """Parse PEBL's TimeStamp column (e.g. 'Thu Aug 13 00:12:20 2026') into a date."""
+    if not ts:
+        return None
+    try:
+        return datetime.strptime(str(ts).strip(), "%a %b %d %H:%M:%S %Y").date()
+    except ValueError:
+        return None
 
 
 def _fmt_value(v):

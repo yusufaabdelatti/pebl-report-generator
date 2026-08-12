@@ -10,6 +10,7 @@ from assessments import (
     WCST_REFERENCE_NOTE,
     classify_iq,
     parse_wcst_csv,
+    parse_wcst_timestamp,
     wcst_row_label,
     wcst_scorecard,
 )
@@ -28,8 +29,12 @@ st.caption("Add one or more assessments, then generate a single AI-assisted PDF 
 
 with st.sidebar:
     st.header("Report Details")
-    patient_id = st.text_input("Patient / Subject ID (optional — auto-filled from CSV if left blank)")
-    report_date = st.date_input("Report Date", value=date.today())
+    patient_id = st.text_input("Patient / Subject ID (optional — auto-filled if left blank)")
+    report_date = st.date_input(
+        "Report Date",
+        value=date.today(),
+        help="Defaults to today; the date shown at the top and next to the signature. Change it if you're signing a report for a different day.",
+    )
     clinician_name = st.text_input("Clinician Name (signature)")
 
 st.divider()
@@ -53,21 +58,37 @@ if assessment_type == "Wisconsin Card Sorting Test (WCST)":
         else:
             row = df.iloc[0].to_dict()
         st.dataframe(df.iloc[[0]] if len(df) == 1 else df, use_container_width=True)
+
+        detected_date = parse_wcst_timestamp(row.get("TimeStamp")) or date.today()
+        assessment_date = st.date_input(
+            "Assessment Date",
+            value=detected_date,
+            help="Auto-filled from the uploaded file's timestamp — adjust if needed.",
+            key=f"wcst_date_{len(st.session_state.assessments)}",
+        )
+
         if st.button("Add WCST to report"):
             st.session_state.assessments.append({
                 "type": "wcst",
                 "name": "Wisconsin Card Sorting Test (WCST)",
                 "row": row,
+                "date": assessment_date,
             })
             st.rerun()
 
 elif assessment_type == "Performance IQ (Non-Verbal)":
     piq_score = st.number_input("Performance IQ Score", min_value=40, max_value=180, value=100, step=1)
+    piq_date = st.date_input(
+        "Assessment Date",
+        value=date.today(),
+        key=f"piq_date_{len(st.session_state.assessments)}",
+    )
     if st.button("Add Performance IQ to report"):
         st.session_state.assessments.append({
             "type": "piq",
             "name": "Performance IQ (Non-Verbal)",
             "score": piq_score,
+            "date": piq_date,
         })
         st.rerun()
 
@@ -81,9 +102,12 @@ else:
         cols = st.columns([5, 1])
         with cols[0]:
             if a["type"] == "wcst":
-                st.write(f"**{i + 1}. {a['name']}** — subject `{a['row'].get('subNum', '?')}`")
+                st.write(
+                    f"**{i + 1}. {a['name']}** — subject `{a['row'].get('subNum', '?')}` "
+                    f"— {a['date'].strftime('%b %d, %Y')}"
+                )
             else:
-                st.write(f"**{i + 1}. {a['name']}** — score {a['score']}")
+                st.write(f"**{i + 1}. {a['name']}** — score {a['score']} — {a['date'].strftime('%b %d, %Y')}")
         with cols[1]:
             if st.button("Remove", key=f"remove_{i}"):
                 st.session_state.assessments.pop(i)
@@ -114,6 +138,7 @@ if st.button("Generate PDF Report", type="primary", disabled=not st.session_stat
                     )
                     sections.append({
                         "name": a["name"],
+                        "date": a["date"],
                         "description": WCST_DESCRIPTION,
                         "scorecard": cards,
                         "narrative": narrative,
@@ -127,6 +152,7 @@ if st.button("Generate PDF Report", type="primary", disabled=not st.session_stat
                     narrative = generate_section_narrative(a["name"], PIQ_DESCRIPTION, score_lines)
                     sections.append({
                         "name": a["name"],
+                        "date": a["date"],
                         "description": PIQ_DESCRIPTION,
                         "scorecard": cards,
                         "narrative": narrative,

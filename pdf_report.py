@@ -68,6 +68,9 @@ def build_pdf(
 
     for section in sections:
         story.append(Paragraph(section["name"], styles["SectionHeading"]))
+        if section.get("date"):
+            story.append(Paragraph(f"Assessment Date: <b>{section['date'].strftime('%B %d, %Y')}</b>", styles["Meta"]))
+            story.append(Spacer(1, 4))
         story.append(Paragraph(section["description"], styles["Body"]))
         story.append(Spacer(1, 8))
 
